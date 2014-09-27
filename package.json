@@ -1,0 +1,26 @@
+{
+  "name": "iphone6",
+  "version": "0.1.0",
+  "description": "Will send you an email when your iphone is available for reservation",
+  "main": "iphone6.js",
+  "dependencies": {
+    "cheerio": "^0.17.0",
+    "nodemailer": "^1.3.0",
+    "nodemailer-ses-transport": "^1.2.0",
+    "request": "^2.44.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bsansouci/iwantmyiphone6"
+  },
+  "author": "bsansouci",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bsansouci/iwantmyiphone6/issues"
+  },
+  "homepage": "https://github.com/bsansouci/iwantmyiphone6"
+}
