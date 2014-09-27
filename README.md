@@ -10,3 +10,4 @@ All you need a file called config.json of this form:
 }
 ```
 
+Then you can run it on a server using [forever](https://github.com/nodejitsu/forever).
