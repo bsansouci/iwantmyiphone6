@@ -12,14 +12,20 @@ var keys = JSON.parse(fs.readFileSync("./config.json", "utf8"));
 // We create the transporter for the email
 var transporter = nodemailer.createTransport(ses(keys));
 
+// Here is a list of the serial numbers of the phones I don't care about
+// I can't seem to figure out which is which, but I know those aren't the
+// iphone 6 - 64Gb
 var dontCare = ["MG3H2CL/A", "MG3E2CL/A", "MG3F2CL/A", "MG3D2CL/A"];
-var email = "benjamin.sansouci@gmail.com", storeName = "Sainte-Catherine";
+
+// email: Email address to which send the "notification"
+// storeName: name of the store where you want to reserve your iPhone 6
+var email = "my.email@gmail.com", storeName = "Sainte-Catherine";
 
 // This function will be call every 5 seconds to check if the status of the
 // iphone 6 has changed
 function loop () {
   request.get('https://reserve.cdn-apple.com/CA/en_CA/reserve/iPhone/availability.json', function(err, body, availability) {
-
+    // Parse the json with the availability of the different phones
     var available = JSON.parse(availability);
     request.get("https://reserve.cdn-apple.com/CA/en_CA/reserve/iPhone/stores.json", function(err, body, storesString) {
       var stores = JSON.parse(storesString);
@@ -36,6 +42,8 @@ function loop () {
           return i === x;
         }).length === 0;
 
+        // If the phone is available and isn't one that we dont' care about
+        // we send the email
         if(available[storeNumber][i] && isNotThoseiPhones) {
           transporter.sendMail({
             from: 'Apple ✔ <'+email+'>', // sender address
@@ -59,4 +67,6 @@ function loop () {
     });
   });
 }
+
+// Do the get request every 5 seconds
 var interval = setInterval(loop, 5000);
