@@ -21,8 +21,15 @@ var dontCare = ["MG3H2CL/A", "MG3E2CL/A", "MG3F2CL/A", "MG3D2CL/A"];
 // storeName: name of the store where you want to reserve your iPhone 6
 var email = "my.email@gmail.com", storeName = "Sainte-Catherine";
 
-// This function will be call every 5 seconds to check if the status of the
-// iphone 6 has changed
+// today is used to check if changed day (at midnight). If so, we'll reset the
+// previouslyAvailablePhones array
+var today = new Date();
+var previouslyAvailablePhones = [];
+
+/**
+ * This function will be call every 5 seconds to check if the status of the
+ * iphone 6 has changed
+ */
 function loop () {
   request.get('https://reserve.cdn-apple.com/CA/en_CA/reserve/iPhone/availability.json', function(err, body, availability) {
     // Parse the json with the availability of the different phones
@@ -38,31 +45,30 @@ function loop () {
       // We iterate through the properties of the object, which are serial
       // numbers, and we check if the phone we're waiting for is available
       for(var i in available[storeNumber]) {
-        var isNotThoseiPhones = dontCare.filter(function(x) {
-          return i === x;
-        }).length === 0;
+        var phonesThatIdontCareAbout = contains(dontCare, i);
+
+        var didWeAlreadySendAnEmail = contains(previouslyAvailablePhones, i);
 
         // If the phone is available and isn't one that we dont' care about
         // we send the email
-        if(available[storeNumber][i] && isNotThoseiPhones) {
+        if(available[storeNumber][i] && !phonesThatIdontCareAbout && !didWeAlreadySendAnEmail) {
+          // We push the serial number in an array to avoid spamming you if
+          // it's still available in the next 5 seconds.
+          previouslyAvailablePhones.push(i);
           transporter.sendMail({
             from: 'Apple ✔ <'+email+'>', // sender address
             to: email, // list of receivers
             subject: 'iPhone available', // Subject line
             html: '<a href="https://reserve.cdn-apple.com/CA/en_CA/reserve/iPhone/availability">Click</a>' // html body
-          }, function(error, info){
-            if(error){
-              console.log(error);
-            }else{
-              console.log('Message sent:', info);
-            }
-          });
-
-          // Once we saw that it might be available, we stop and wait a minute
-          // before re-trying (if we don't, we'll receive one email every 5sec)
-          clearInterval(interval);
-          interval = setInterval(loop, 60000);
+          }, done);
         }
+      }
+
+      // If today is a different day from 5 seconds ago, we reset the
+      // available phones array
+      var tmp = new Date();
+      if(tmp.getDate() !== today.getDate()) {
+        previouslyAvailablePhones = [];
       }
     });
   });
@@ -70,3 +76,28 @@ function loop () {
 
 // Do the get request every 5 seconds
 var interval = setInterval(loop, 5000);
+
+/**
+ * Callback for when the email is sent or note
+ * @param  {Object}   error describes the error
+ * @param  {Object}   info  describes the result (if no error)
+ */
+function done(error, info){
+  if(error) {
+    console.log(error);
+  } else {
+    console.log('Message sent:', info);
+  }
+}
+
+/**
+ * Helper function that returns true if the element x is in the array arr
+ * @param  {Array}   arr the array in which x is checked to be in
+ * @param  {a} x     anything that could be in the array
+ * @return {Boolean} whether or not x is in arr
+ */
+function contains (arr, x) {
+  return arr.filter(function(val) {
+    return val === x;
+  }).length > 0;
+}
