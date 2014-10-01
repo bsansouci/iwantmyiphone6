@@ -37,6 +37,8 @@ function loop () {
     request.get("https://reserve.cdn-apple.com/CA/en_CA/reserve/iPhone/stores.json", function(err, body, storesString) {
       var stores = JSON.parse(storesString);
 
+      if(!stores.stores) return;
+
       // We get the storeNumber by removing all stores except the one we want
       var storeNumber = stores.stores.filter(function(val) {
         return val.storeName === storeName;
