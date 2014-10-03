@@ -15,7 +15,7 @@ var transporter = nodemailer.createTransport(ses(keys));
 // Here is a list of the serial numbers of the phones I don't care about
 // I can't seem to figure out which is which, but I know those aren't the
 // iphone 6 - 64Gb
-var dontCare = ["MG3H2CL/A", "MG3E2CL/A", "MG3F2CL/A", "MG3D2CL/A", "MG3A2CL/A", "MG3C2CL/A"];
+var dontCare = ["MG3H2CL/A", "MG3E2CL/A", "MG3F2CL/A", "MG3D2CL/A", "MG3A2CL/A", "MG3C2CL/A", "MG9M2CL/A"];
 
 // email: Email address to which send the "notification"
 // storeName: name of the store where you want to reserve your iPhone 6
