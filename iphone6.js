@@ -32,9 +32,12 @@ var previouslyAvailablePhones = [];
  */
 function loop () {
   request.get('https://reserve.cdn-apple.com/CA/en_CA/reserve/iPhone/availability.json', function(err, body, availability) {
+    if(!isJSON(availability)) return;
     // Parse the json with the availability of the different phones
     var available = JSON.parse(availability);
     request.get("https://reserve.cdn-apple.com/CA/en_CA/reserve/iPhone/stores.json", function(err, body, storesString) {
+      if(!isJSON(storesString)) return;
+
       var stores = JSON.parse(storesString);
 
       if(!stores.stores) return;
@@ -50,6 +53,8 @@ function loop () {
         var phonesThatIdontCareAbout = contains(dontCare, i);
 
         var didWeAlreadySendAnEmail = contains(previouslyAvailablePhones, i);
+        
+        console.log(phonesThatIdontCareAbout, previouslyAvailablePhones, didWeAlreadySendAnEmail, i);
 
         // If the phone is available and isn't one that we dont' care about
         // we send the email
@@ -57,6 +62,7 @@ function loop () {
           // We push the serial number in an array to avoid spamming you if
           // it's still available in the next 5 seconds.
           previouslyAvailablePhones.push(i);
+
           transporter.sendMail({
             from: 'Apple ✔ <'+email+'>', // sender address
             to: email, // list of receivers
@@ -70,6 +76,7 @@ function loop () {
       // available phones array
       var tmp = new Date();
       if(tmp.getDate() !== today.getDate()) {
+        console.log("reseting phones");
         previouslyAvailablePhones = [];
       }
     });
@@ -102,4 +109,13 @@ function contains (arr, x) {
   return arr.filter(function(val) {
     return val === x;
   }).length > 0;
+}
+
+function isJSON (json) {
+  try {
+    JSON.parse(json);
+  } catch(err) {
+    return false;
+  }
+  return true;
 }
