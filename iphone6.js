@@ -54,7 +54,6 @@ function loop () {
 
         var didWeAlreadySendAnEmail = contains(previouslyAvailablePhones, i);
         
-        console.log(phonesThatIdontCareAbout, previouslyAvailablePhones, didWeAlreadySendAnEmail, i);
 
         // If the phone is available and isn't one that we dont' care about
         // we send the email
@@ -62,6 +61,7 @@ function loop () {
           // We push the serial number in an array to avoid spamming you if
           // it's still available in the next 5 seconds.
           previouslyAvailablePhones.push(i);
+          console.log(phonesThatIdontCareAbout, previouslyAvailablePhones, didWeAlreadySendAnEmail, i);
 
           transporter.sendMail({
             from: 'Apple ✔ <'+email+'>', // sender address
