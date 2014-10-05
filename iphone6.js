@@ -78,6 +78,7 @@ function loop () {
       if(tmp.getDate() !== today.getDate()) {
         console.log("reseting phones");
         previouslyAvailablePhones = [];
+        today = new Date();
       }
     });
   });
