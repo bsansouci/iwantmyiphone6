@@ -1,6 +1,8 @@
 iwantmyiphone6
 ==============
-Script that will do regular get requests to check if your iPhone 6 is available for reservation at the retailer of your choice.
+_This is a toy project because I was annoyed at Apple's customer service. Please don't use it to spam their servers, I'm not responsible for what you do with this code._
+
+This will do regular get requests to check if your iPhone 6 is available for reservation at the retailer of your choice.
 
 All you need a file called config.json of this form:
 ```js
@@ -10,4 +12,14 @@ All you need a file called config.json of this form:
 }
 ```
 
-Then you can run it on a server using [forever](https://github.com/nodejitsu/forever).
+## Install
+Simply run
+``` 
+npm install 
+node iphone6.js
+```
+
+Then you can run it on a server using [forever](https://github.com/nodejitsu/forever). Do the following:
+```
+forever start iphone6.js
+```

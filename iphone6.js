@@ -53,7 +53,6 @@ function loop () {
         var phonesThatIdontCareAbout = contains(dontCare, i);
 
         var didWeAlreadySendAnEmail = contains(previouslyAvailablePhones, i);
-        
 
         // If the phone is available and isn't one that we dont' care about
         // we send the email
